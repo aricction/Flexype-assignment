@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
-const {SMTP_USER } = process.env;
+const {SMTP_USER ,SEND_TO_MAIL } = process.env;
+
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -16,16 +17,24 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendAlertEmail(ip, count){
-    const mailOption = {
-        from: SMTP_USER,
-        to:"govindpurty736@gmail.com",
-        subject: `alert: Excessive failed request`,
-        text:`the IP ${ip} has made ${count} failed request within the time window ` ,
-    };
 
-    await transporter.sendMail(mailOption);
-  
-    console.log(`Alert email sent successfully to ${mailOption.to}`);
-}
+    try {  
+        //email information 
+        const mailOption = {
+            from: SMTP_USER,
+            to: SEND_TO_MAIL,
+            subject: `alert: Excessive failed request`,
+            text:`the IP ${ip} has made ${count} failed request within the time window ` ,
+        };
+        // send mail
+        await transporter.sendMail(mailOption);
+      
+        console.log(`Alert email sent successfully to ${mailOption.to}`);
+    
+    
+     } catch (error) {
+     console.log('error sending alert email',error);
+    }
+   }
 
 module.exports = { sendAlertEmail };

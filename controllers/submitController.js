@@ -15,19 +15,22 @@ app.use(bodyParser.json());
     if(!accessToken || accessToken !== "valid-token"){
         
 
-        const threshold = parseInt(ALERT_THRESHOLD,10) || 5;
-        const window = parseInt(WINDOW_DURATION,10)* 60 * 1000;
+        const threshold = parseInt(ALERT_THRESHOLD, 10) || 5;
+        const window = parseInt(WINDOW_DURATION, 10)* 60 * 1000;
 
         await FailedRequest.create({ip, reason: "invalid token"});
              
         const count = await FailedRequest.countDocuments(ip);
         
-        if(count >= threshold){
+        if(count  > threshold){
+            
             console.log(`alert : IP ${ip} exceeded threshold with ${count} attempts`);
+            
+            //send alert email
             await sendAlertEmail(ip, count);
         }
 
-        res.status(401).json({error: "invalid token"});
+        res.status(401).json({error: "incorrect access token"});
         return;
     }
 
