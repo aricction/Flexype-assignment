@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const FailedRequest = require('../models/FailedRequest');
 const { sendAlertEmail } = require("../utils/sendAlertEmail");
-
+const {ALERT_THRESHOLD, WINDOW_DURATION} = process.env;
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,8 +15,8 @@ app.use(bodyParser.json());
     if(!accessToken || accessToken !== "valid-token"){
         
 
-        const threshold = parseInt(5,10) || 1;
-        const window = parseInt(60000,10)* 60 * 1000 || 60000;
+        const threshold = parseInt(ALERT_THRESHOLD,10) || 5;
+        const window = parseInt(WINDOW_DURATION,10)* 60 * 1000;
 
         await FailedRequest.create({ip, reason: "invalid token"});
              
