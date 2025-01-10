@@ -88,7 +88,7 @@ Send an alert email when the failed request count exceeds the threshold.
       Alert email sent successfully to recipient@example.com
 
 
-2. Test retrieve metrics
+3. Test retrieve metrics
  
         URL: http://localhost:3000/metrics  
         Method: GET  
